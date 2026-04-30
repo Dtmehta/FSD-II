@@ -1,0 +1,25 @@
+const express = require('express')
+const app = express()
+var cp = require('cookie-parser')
+app.use(cp())
+app.get("/cookie" , (req,res) =>{
+    res.cookie('fname' , 'ExpressJs')
+    res.cookie('lname' , 'JavaScript')
+    res.cookie('ID' , '2', {maxAge:9000})
+    res.clearCookie('lname')
+    res.send(req.cookies)
+}).listen(5001)
+
+app.use(express.static(__dirname,{index:'cookie.html'}))
+app.get("/next" , (req,res) =>{
+    res.cookie('username' , req.query.uname)
+    res.cookie('lname' , req.query.lname)
+    res.cookie('password' , req.query.pass)
+    res.redirect('/about')
+})
+app.get('/about' , (req,res) =>{
+    res.clearCookie('lname')
+    res.write('Username = '+req.cookies.username)
+    res.write("Password = "+req.cookies.password)
+    res.send()
+}).listen(3001)
