@@ -1,0 +1,64 @@
+10 random data - _id , name,age , city , marks , status
+--> db.student.find({name : {$regex : /pattern/}})
+
+question 
+1. display student whose name contains "user"  --> /user/
+2. display student whose name starts "B" --> /^B/
+3. display student whose name ends with "i" --> /i$/
+4. display student whose name contains only digits --> /^[0-9]$/
+5. display student whose name contains only latters --> 
+6. display student whose name starts with a letter and ends with a digit -->
+7. display student whose name starts with 'A' or 'R' --> /^[AR]+/
+8. display student whose name contains atleast one digit --> /[0-9]+/
+
+
+({$or : [{city :} , {name : }]} , {$regex})
+
+##### INDEXING #####
+- db.collectionName.createIndex({field : 1/-1})
+
+** explain() method
+   --> totalDocsExamined
+   --> nReturned
+   --> stage : COCAN -> collection scanning
+               IXSCAN -> Index scanning
+    ex. --> db.student.createIndex({age : 1})
+        --> db.emp.find({age : {$gt : 12}}).explain("executionStats")
+    
+    Compued Index
+        --> db.student.createIndex({age : 1 , name : -1})
+        --> db.student.find({age : 20 , name : "user"}).explain("executionStats")
+
+    partial Indexing
+        --> db.student.createIndex({marks : 1} , {partialFilterExpression : { marks : {$gt : 70}}})
+        --> db.student.find({marks : {$gt : 70}}).explain("executionStats")
+
+    Drop Index --> db.student.dropIndex({})
+
+***** Mongoose *****
+## Schema  (fieldname , datatypes , validation)
+    datatypes 
+        1. String - text
+        2. Number - numbers
+        3. Boolean - true or false
+        4. Date - date and time
+        5. ObjectId - document reference
+        6. Array - multiple values
+
+    validation
+        save - started or not incomplete constistency
+        required - 
+        unique - value are unique , not duplicate allow
+        default - 
+        min , max - 
+        minlength , maxlength - 
+        enum - specific value allow 
+        match - 
+        trim - remove unnessasary space
+        lowercase , uppercase - 
+        validate - custome validation
+        strict - strictly follow the Schema (T/F)
+
+model
+    const person = new mg.model ("person" , mySchema)
+        
