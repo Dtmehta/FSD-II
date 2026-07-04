@@ -1,0 +1,48 @@
+** SQL to mongoDB Mapping **
+
+q-1) select * from lju where age <=25
+--> db.lju.find({age : {$lte : 25}})
+
+q-2) select * from lju where name="abc" and age=20
+--> db.lju.find({$and : [{name : "abc"},{age : 20}]})
+
+q-3) select * from lju where status="A" ORDER BY age ASC
+--> db.lju.find({status : "A"}).sort({age : 1})
+
+q-4) select count(*) from lju
+--> db.lju.find().count()
+
+q-5) select count(*) from lju where age > 30
+--> db.lju.find({age : {$gt : 30}}).count()
+
+q-6) select * from lju limit 1
+-->db.lju.find().limit(1)
+
+q-7) select * from lju limit 2 offset 3
+-->db.lju.find().limit(2).skip(3)
+
+--8.>db.lju.updateOne({age : {$gt : 25}} , {$set : {status : "C"}})
+--9.> db.lju.find({status : "A"} , {$inc : {age : 3}})
+--10.> db.lju.find({name : {$nin : ['aaa','abc' , 'bbb']}})
+
+**Aggregation**
+syntex. --> db.people.aggregate ([{$match : } , {$group : } , {$sort : } , {$project : }])
+
+Q - using the aggregation fremwork perform the following operation : 
+1. group student based on their city
+2. calculate the avg marks of students in each city 
+3. sort the result in desc order of avg marks 
+4. display only the city name and avg marks 
+--ans.-- db.people.aggregate([{$group : {_id :"$city", avgmarks : 
+	{$avg : "$marks"}}}, {$sort :{avgmarks : -1}} ,
+ 	{$project : {city : "$_id" , avgmarks : 1 , _id:0}}])
+Q- 
+1. select students whose marks are >= 80
+2. group the selected studetnt by city 
+3. calculate the total marks obtain by studetnt in each city
+4. sort the result in desc order of total marks
+5. display only city name and total marks
+--ans.-- db.people.aggregate([{$match :{marks : {$gte : 80}}},
+	{$group : {_id :"$city", totalmarks : {$sum : "$marks"}}}, 
+	{$sort :{totalmarks : -1}} ,
+	{$project : {city : "$_id" , totalmarks : "$totalmarks", _id:0}}])
